@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <script src="jquery-3.0.0.min.js"></script>
+    <style>
+      nav {
+        display: block;
+        width: 640px;
+        text-align: center;
+        margin: 20px;
+      }
+    
+      nav > div {
+        width: 50px;
+        height: 50px;
+        border: 1px solid;
+        line-height: 50px;
+        text-align: center;
+        font-size: 2em;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+
+    <nav id="navigation">
+      <div id="south"  data-offset-y="1">N</div>
+      <div id="west" data-offset-x="1">W</div>
+      <div id="east" data-offset-x="-1">E</div>
+      <div id="south"  data-offset-y="-1">S</div>
+    </nav>
+
+    <script>
+
+    const getParameterByName = (name, url) => {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    
+
+    $(() => {
+      const tileSize = 128
+      const gridSize = 5
+      const seed = getParameterByName('seed') || Math.random()
+      let offsetX = parseInt(getParameterByName('offsetX'),10) || 0
+      let offsetY = parseInt(getParameterByName('offsetY'),10) || 0
+
+      const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}&offsetX=${offsetX}&offsetY=${offsetY}`
+      window.history.pushState({path:newurl},'',newurl);
+
+      for (let y = 0; y < gridSize; y++) {
+        for (let x = 0; x < gridSize; x++) { 
+          const imgElement = document.createElement('img')
+          imgElement.src = `${window.location.protocol}//${window.location.host}/heightmap?sizeX=${tileSize}&sizeY=${tileSize}&seed=${seed}&offsetX=${(x-offsetX)*tileSize}&offsetY=${(y-offsetY)*tileSize}`
+          document.body.appendChild(imgElement)
+        }
+        const brElement = document.createElement('br')
+        document.body.appendChild(brElement)
+      }
+      
+      $('nav>div').click(function(e) {
+        if ($(this)[0].dataset.offsetX) {
+          offsetX += parseInt($(this)[0].dataset.offsetX,0)
+        } else if ($(this)[0].dataset.offsetY) {
+          offsetY += parseInt($(this)[0].dataset.offsetY,0)
+        }
+        
+        window.location.search = `?seed=${seed}&offsetX=${offsetX}&offsetY=${offsetY}`
+      })
+    })
+
+    </script>  
+  </body>
+</html>
