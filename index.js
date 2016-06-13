@@ -29,10 +29,12 @@ const colorize = (value) => {
   return {r, g, b}
 }
 
-const generateHeightMap = ({size, offset, seed}) => {
+const generateHeightMap = ({size, offset, seed, zoom}) => {
+    
   const randomFunction = new Alea(seed)
+  const zoomFactor = Math.pow(2, zoom)
   
-    const height = new FastSimplexNoise({
+  const height = new FastSimplexNoise({
     frequency: 0.0001,
     min: 0,
     max: maxHeight,
@@ -41,7 +43,7 @@ const generateHeightMap = ({size, offset, seed}) => {
     random: randomFunction
   })
   
-    const heightNoise = new FastSimplexNoise({
+  const heightNoise = new FastSimplexNoise({
     frequency: 0.001,
     min: -maxHeight/5,
     max: maxHeight/5,
@@ -56,7 +58,10 @@ const generateHeightMap = ({size, offset, seed}) => {
    
   for (let x = 0; x < size.x; x++) {
     for (let y = 0; y < size.y; y++) {
-      const heightValue = (height.in2D(x + offset.x, y + offset.y) + heightNoise.in2D(x + offset.x, y + offset.y)) / 1.05
+      const heightValue = (
+        height.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor) 
+        + heightNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
+        ) / 1.05
            
       let {r, g, b} = colorize(heightValue)
             
@@ -76,6 +81,7 @@ app.get('/heightmap/:seed/:zoom/:offsetX/:offsetY.png', (req, res) => {
       x: 256,
       y: 256
     },
+    zoom: -parseInt(req.params.zoom, 10),
     offset: {
       x: parseInt(req.params.offsetX, 10) * 256,
       y: parseInt(req.params.offsetY, 10) * 256

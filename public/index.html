@@ -25,29 +25,34 @@
     let lat = getParameterByName('lat') || 0
     let lng = getParameterByName('lng') || 0
     const seed = getParameterByName('seed') || Math.random()
-    const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}`
-    window.history.pushState({path:newurl},'',newurl); 
+    const zoom = getParameterByName('zoom') || 10
     
     const map = L.map('mapid', {
       center: [lat, lng],
       crs: L.CRS.Simple,
-      zoom: 1,
-      minZoom: 1,
-      maxZoom: 1,
-      zoomControl: false
+      zoom,
+      minZoom: 4,
+      maxZoom: 18,
+      zoomControl: true
     });
     
     
     L.tileLayer(`${window.location.protocol}//${window.location.host}/heightmap/{seed}/{z}/{x}/{y}.png`, {
-      seed
+      seed,
+      zoomOffset: -10
     }).addTo(map);
     
     map.on('moveend', () => {
       const mapCenter = map.getCenter()
+
       
-      const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}&lat=${mapCenter.lat}&lng=${mapCenter.lng}`
+      const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}&lat=${mapCenter.lat}&lng=${mapCenter.lng}&zoom=${map.getZoom()}`
       window.history.pushState({path:newurl},'',newurl);  
     })
+    
+      
+    const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}&lat=${lat}&lng=${lng}&zoom=${zoom}`
+    window.history.pushState({path:newurl},'',newurl);  
 
     </script>  
   </body>
