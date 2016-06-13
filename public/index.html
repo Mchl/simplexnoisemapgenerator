@@ -23,6 +23,8 @@
     let lat = getParameterByName('lat') || 0
     let lng = getParameterByName('lng') || 0
     const seed = getParameterByName('seed') || Math.random()
+    const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}`
+    window.history.pushState({path:newurl},'',newurl); 
     
     const map = L.map('mapid', {
       center: [lat, lng],
