@@ -29,20 +29,10 @@ const colorize = (value) => {
   return {r, g, b}
 }
 
-app.use(express.static('public'))
-
-app.get('/heightmap', (req, res) => {
-  console.log(req.query)
-  
-  const sizeX = parseInt(req.query.sizeX, 10)
-  const sizeY = parseInt(req.query.sizeY, 10)
-  const offsetX = parseInt(req.query.offsetX, 10)
-  const offsetY = parseInt(req.query.offsetY, 10)
-  const seed = parseFloat(req.query.seed, 10)
-  
+const generateHeightMap = ({size, offset, seed}) => {
   const randomFunction = new Alea(seed)
-    
-  const height = new FastSimplexNoise({
+  
+    const height = new FastSimplexNoise({
     frequency: 0.0001,
     min: 0,
     max: maxHeight,
@@ -51,8 +41,7 @@ app.get('/heightmap', (req, res) => {
     random: randomFunction
   })
   
-   
-  const heightNoise = new FastSimplexNoise({
+    const heightNoise = new FastSimplexNoise({
     frequency: 0.001,
     min: -maxHeight/5,
     max: maxHeight/5,
@@ -60,26 +49,43 @@ app.get('/heightmap', (req, res) => {
     persistence: 0.5,
     random: randomFunction
   })
-
   
-  const canvas = new Canvas(sizeX, sizeY)
+  const canvas = new Canvas(size.x, size.y)
   const ctx = canvas.getContext('2d');
   const stream = canvas.pngStream()
-  
-  for (let x = 0; x < sizeX; x++) {
-    for (let y = 0; y < sizeY; y++) {
-      const heightValue = (height.in2D(x + offsetX, y + offsetY) + heightNoise.in2D(x + offsetX, y + offsetY)) / 1.05
-      
-      //let r = g = b = Math.round(heightValue * 255 / maxHeight)
-      
+   
+  for (let x = 0; x < size.x; x++) {
+    for (let y = 0; y < size.y; y++) {
+      const heightValue = (height.in2D(x + offset.x, y + offset.y) + heightNoise.in2D(x + offset.x, y + offset.y)) / 1.05
+           
       let {r, g, b} = colorize(heightValue)
             
       setPixel(ctx, x, y, r, g, b, 1)
     }
   }
   
+  return stream
+}
+
+app.use(express.static('public'))
+
+app.get('/heightmap/:seed/:zoom/:offsetX/:offsetY.png', (req, res) => {
+ 
+  const mapConfig = {
+    size: {
+      x: 256,
+      y: 256
+    },
+    offset: {
+      x: parseInt(req.params.offsetX, 10) * 256,
+      y: parseInt(req.params.offsetY, 10) * 256
+    },
+    seed: parseFloat(req.params.seed, 10)
+  }
+  
   res.set('Content-Type', 'image/png');
-  stream.pipe(res)
+  
+  generateHeightMap(mapConfig).pipe(res)
 })
 
 app.listen(3000, () => {})
