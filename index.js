@@ -8,11 +8,6 @@ const Canvas = require('canvas')
   const maxHeight = 10000
   const seaLevel = 4000
 
-const setPixel = (ctx, x, y, r, g, b, a) => {
-  ctx.fillStyle = `rgba(${r},${g},${b},${a})`
-  ctx.fillRect( x, y, 1, 1 )
-}
-
 const colorize = (value) => {
   let r, g, b    
       
@@ -55,6 +50,7 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
   const canvas = new Canvas(size.x, size.y)
   const ctx = canvas.getContext('2d');
   const stream = canvas.pngStream()
+  let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height)
    
   for (let x = 0; x < size.x; x++) {
     for (let y = 0; y < size.y; y++) {
@@ -64,10 +60,14 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
         ) / 1.05
            
       let {r, g, b} = colorize(heightValue)
-            
-      setPixel(ctx, x, y, r, g, b, 1)
+      const index = 4 * (y * size.x + x)
+      pixels.data[index] = r
+      pixels.data[index+1] = g
+      pixels.data[index+2] = b
+      pixels.data[index+3] = 255
     }
   }
+  ctx.putImageData(pixels, 0, 0)
   
   return stream
 }
