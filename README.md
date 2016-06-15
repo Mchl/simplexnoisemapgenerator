@@ -27,6 +27,10 @@ You might want to use [PM2](http://pm2.keymetrics.io/) to run several instances 
 
 I have set it up on http://spigot.michaljarosz.net - the server is not very powerful though, so expect slow rendering times.
 
+## Reading material
+
+* [Christian Maher: Working with Simplex Noise](https://cmaher.github.io/posts/working-with-simplex-noise/)
+
 ## License
 
 MIT
