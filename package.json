@@ -10,8 +10,10 @@
   "license": "MIT",
   "dependencies": {
     "alea": "0.0.9",
+    "bunyan": "^1.8.1",
     "canvas": "^1.3.16",
     "express": "^4.13.4",
-    "fast-simplex-noise": "^2.1.1"
+    "fast-simplex-noise": "^2.1.1",
+    "uuid": "^2.0.2"
   }
 }
