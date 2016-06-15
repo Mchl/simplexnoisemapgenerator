@@ -12,7 +12,7 @@ const logRequestMiddleware = (req, res, next) => {
   
   requestLogger.info(req.uuid.substr(0, 8), req.method, req.originalUrl)
   res.on('finish', function responseSent() {
-    const diff = process.hrtime(startTime);
+    const diff = process.hrtime(startTime)
     const responseData = {
       duration: diff[0] * 1e3 + diff[1] * 1e-6,
       statusCode: res.statusCode,
