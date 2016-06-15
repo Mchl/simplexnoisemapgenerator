@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-const generateHeightMap = require('./generate-heightmap')
+const generateTile = require('./generate-heightmap')
 const loggers = require('./loggers')
 
 app.use(express.static('public'))
@@ -25,7 +25,7 @@ app.get('/heightmap/:seed/:zoom/:offsetX/:offsetY.png', (req, res) => {
   
   res.set('Content-Type', 'image/png');
   
-  generateHeightMap(mapConfig).pipe(res)
+  generateTile(mapConfig).pipe(res)
 })
 
 app.listen(3000, () => {})
