@@ -25,13 +25,13 @@
     let lat = getParameterByName('lat') || 0
     let lng = getParameterByName('lng') || 0
     const seed = getParameterByName('seed') || Math.random()
-    const zoom = getParameterByName('zoom') || 10
+    const zoom = getParameterByName('zoom') || 3
     
     const map = L.map('mapid', {
       center: [lat, lng],
       crs: L.CRS.Simple,
       zoom,
-      minZoom: 4,
+      minZoom: 0,
       maxZoom: 18,
       zoomControl: true
     });
@@ -39,7 +39,7 @@
     
     L.tileLayer(`${window.location.protocol}//${window.location.host}/heightmap/{seed}/{z}/{x}/{y}.png`, {
       seed,
-      zoomOffset: -10
+      zoomOffset: -6
     }).addTo(map);
     
     map.on('moveend', () => {
