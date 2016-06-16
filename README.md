@@ -2,7 +2,7 @@
 
 This is an excersise in procedurally generating heightmaps. [Leaflet](http://leafletjs.com/) is used to display the results on a webpage.
 
-At this moment it is using two instances of simplex noise at different frequencies. I plan for adding some more feauters like biomes, rivers, maybe some man-made features.
+At this moment it is using two instances of simplex noise at different frequencies to generate heightmap. Biomes are calculated using elevation above sea level and rainfall value generated from another instance of simplex noise
 
 ## Installation
 
@@ -27,9 +27,15 @@ You might want to use [PM2](http://pm2.keymetrics.io/) to run several instances 
 
 I have set it up on http://spigot.michaljarosz.net - the server is not very powerful though, so expect slow rendering times.
 
+## Version history
+
+* 0.0.4 - Added biome generation based on Polygonal Map Generation for Game from Red Blob Games article (see below)
+* 0.0.3 - First released implementation. Heightmap only
+
 ## Reading material
 
 * [Christian Maher: Working with Simplex Noise](https://cmaher.github.io/posts/working-with-simplex-noise/)
+* [Polygonal Map Generation for Game from Red Blob Games](http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/)
 
 ## License
 

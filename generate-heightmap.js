@@ -32,13 +32,22 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
   })
   
   const featureNoise = new FastSimplexNoise({
-    frequency: 0.001,
-    min: -config.maxHeight/5,
-    max: config.maxHeight/5,
+    frequency: 0.0005,
+    min: -config.maxHeight * 0.2,
+    max: config.maxHeight * 0.2,
     octaves: 16,
     persistence: 0.5,
     random: randomFunction
   }) 
+  
+  const rainfallNoise = new FastSimplexNoise({
+    frequency: 0.0001,
+    min: 0,
+    max: 6,
+    octaves: 16,
+    persistence: 0.8,
+    random: randomFunction
+  })
      
   let pixels = new Uint8ClampedArray(size.x * size.y * 4)
   pixels.setPixel = setPixel
@@ -48,10 +57,12 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
       const height = (
         landMassNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor) 
         + featureNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
-      ) / 1.05
-           
-      const {r, g, b} = colorize(height)
-      
+      ) / 1.2
+
+      const rainfall = rainfallNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
+
+      const {r, g, b} = colorize.biomes(height, rainfall)
+
       pixels.setPixel(x, y, r, g, b, 255)
 
     }
