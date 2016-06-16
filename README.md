@@ -20,8 +20,8 @@ Should be straightforward:
 You might want to use [PM2](http://pm2.keymetrics.io/) to run several instances in parallel to quicker generate the tiles. Running `pm2 start index.js -i 0` will start a number of instances equal to the number of available CPU cores at your machine.
 
 ## Static example
-
-![Example of generated map](http://i.imgur.com/i14NWkT.png)
+### 0.0.4 ![Example of generated map from 0.0.4](http://i.imgur.com/tzhL4Sr.png)
+### 0.0.3 ![Example of generated map from 0.0.3](http://i.imgur.com/i14NWkT.png)
 
 ## Working example
 
