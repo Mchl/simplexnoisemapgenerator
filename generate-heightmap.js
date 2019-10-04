@@ -60,7 +60,7 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
 
       const rainfall = rainfallNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
 
-      const {r, g, b} = colorize.biomes(height, rainfall)
+      const {r, g, b} = colorize.height(height)
 
       pixels.setPixel(x, y, r, g, b, 255)
 
@@ -79,7 +79,7 @@ const generateTile = (tileConfig) => {
 
   ctx.putImageData(createImageData(pixels, size.x, size.y) , 0, 0)
 
-  return canvas.pngStream()
+  return canvas.createPNGStream()
 }
 
 module.exports = generateTile

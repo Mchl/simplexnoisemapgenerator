@@ -1,6 +1,40 @@
 const config = require('./config')
 const logger = require('./loggers').main.child({component: 'COLORIZE'})
 
+// Based on https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps/Conventions
+const topographyLevels = {
+  18: {r: 245, g: 244, b: 242},
+  17: {r: 224, g: 222, b: 216},
+  16: {r: 202, g: 195, b: 184},
+  15: {r: 186, g: 174, b: 154},
+  14: {r: 172, g: 154, b: 124},
+  13: {r: 170, g: 135, b: 83},
+  12: {r: 185, g: 152, b: 90},
+  11: {r: 195, g: 167, b: 107},
+  10: {r: 202, g: 185, b: 130},
+  9: {r: 211, g: 202, b: 157},
+  8: {r: 222, g: 214, b: 163},
+  7: {r: 232, g: 225, b: 182},
+  6: {r: 239, g: 235, b: 192},
+  5: {r: 225, g: 228, b: 181},
+  4: {r: 209, g: 215, b: 171},
+  3: {r: 189, g: 204, b: 150},
+  2: {r: 168, g: 198, b: 143},
+  1: {r: 148, g: 191, b: 139},
+  0: {r: 172, g: 208, b: 165},
+
+  '-1': {r:216, g: 242, b: 254},
+  '-2': {r:198, g: 236, b: 255},
+  '-3': {r:185, g: 227, b: 255},
+  '-4': {r:172, g: 219, b: 251},
+  '-5': {r:161, g: 210, b: 247},
+  '-6': {r:150, g: 201, b: 240},
+  '-7': {r:141, g: 193, b: 234},
+  '-8': {r:132, g: 185, b: 227},
+  '-9': {r:121, g: 178, b: 222},
+  '-10': {r:113, g: 171, b: 216},
+}
+
 const BIOME = {
   BARE:                       Symbol('BARE'),
   GRASSLAND:                  Symbol('GRASSLAND'),
@@ -65,19 +99,11 @@ BIOME_COLORS[BIOME.TUNDRA]                      = [221, 221, 187]
 
 
 const height = (value) => {
-  let r, g, b    
-      
-  if (value <= config.seaLevel) {
-    r = 0
-    g = 0
-    b = Math.round(value * 127 / config.seaLevel)
-  } else {
-    r = Math.round((value - config.seaLevel) * 255 / config.landHeight)
-    g = Math.round((config.maxHeight - value) * 192 / config.landHeight)
-    b = 0
-  }
+  const level = value <= config.seaLevel
+    ? -10 + (value * 10 / config.seaLevel)
+    : (value - config.seaLevel) * 18 / config.landHeight
   
-  return {r, g, b}
+  return topographyLevels[Math.round(level)]
 }
 
 const biomes = (height, rainfall) => {
@@ -105,11 +131,11 @@ const biomes = (height, rainfall) => {
     g = colors[1]
     b = colors[2]
   }
-  
+
   return {r, g, b}
 }
 
-module.exports = { 
+module.exports = {
   height,
   biomes
 }
