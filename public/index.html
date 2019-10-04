@@ -1,7 +1,11 @@
 <html>
   <head>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
-    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
     <style>
       #mapid { height: 100%; }
     </style>
@@ -19,14 +23,14 @@
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
-    
+
     window.L = L
-    
+
     let lat = getParameterByName('lat') || 0
     let lng = getParameterByName('lng') || 0
     const seed = getParameterByName('seed') || Math.random()
     const zoom = getParameterByName('zoom') || 3
-    
+
     const map = L.map('mapid', {
       center: [lat, lng],
       crs: L.CRS.Simple,
@@ -35,25 +39,25 @@
       maxZoom: 18,
       zoomControl: true
     });
-    
-    
-    L.tileLayer(`${window.location.protocol}//${window.location.host}/heightmap/{seed}/{z}/{x}/{y}.png`, {
+
+
+    L.tileLayer(`${window.location.origin}${window.location.pathname}heightmap/{seed}/{z}/{x}/{y}.png`, {
       seed,
       zoomOffset: -6
     }).addTo(map);
-    
+
     map.on('moveend', () => {
       const mapCenter = map.getCenter()
 
-      
-      const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}&lat=${mapCenter.lat}&lng=${mapCenter.lng}&zoom=${map.getZoom()}`
-      window.history.pushState({path:newurl},'',newurl);  
-    })
-    
-      
-    const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?seed=${seed}&lat=${lat}&lng=${lng}&zoom=${zoom}`
-    window.history.pushState({path:newurl},'',newurl);  
 
-    </script>  
+      const newurl = `${window.location.origin}${window.location.pathname}?seed=${seed}&lat=${mapCenter.lat}&lng=${mapCenter.lng}&zoom=${map.getZoom()}`
+      window.history.pushState({path:newurl},'',newurl);
+    })
+
+
+    const newurl = `${window.location.origin}${window.location.pathname}?seed=${seed}&lat=${lat}&lng=${lng}&zoom=${zoom}`
+    window.history.pushState({path:newurl},'',newurl);
+
+    </script>
   </body>
 </html>
