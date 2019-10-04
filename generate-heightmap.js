@@ -75,7 +75,7 @@ const generateTile = (tileConfig) => {
   const {size} = tileConfig
 
   const canvas = createCanvas(size.x, size.y)
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d', {alpha: false})
 
   ctx.putImageData(createImageData(pixels, size.x, size.y) , 0, 0)
 
