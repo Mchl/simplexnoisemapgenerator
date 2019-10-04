@@ -2,7 +2,7 @@
 FROM node:10-alpine
 
 RUN apk add --no-cache \
-    build-base cairo-dev cairo cairo-tools \
+    build-base cairo-dev cairo cairo-tools pango-dev libjpeg-turbo-dev \
     python
 
 # PM2 will be used to run a cluster of node instances for multicore support
