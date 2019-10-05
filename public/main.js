@@ -15,9 +15,14 @@ let lng = getParameterByName('lng') || 0
 const seed = getParameterByName('seed') || Math.random()
 const zoom = getParameterByName('zoom') || 3
 
+const CustomCrs = L.Util.extend({}, L.CRS.Simple, {
+  // Just so that the scale isn't ridiculous
+  distance: (latlng1, latlng2) => 1E4 * L.CRS.Simple.distance(latlng1, latlng2)
+});
+
 const map = L.map('mapid', {
   center: [lat, lng],
-  crs: L.CRS.Simple,
+  crs: CustomCrs,
   zoom,
   minZoom: 0,
   maxZoom: 18,
@@ -49,6 +54,8 @@ const defaultLayerName = layersConfig.find(({default: def}) => def).name
 layers[defaultLayerName].addTo(map)
 
 L.control.layers(layers).addTo(map)
+
+L.control.scale().addTo(map)
 
 
 map.on('moveend', () => {
