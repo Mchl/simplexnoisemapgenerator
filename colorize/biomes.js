@@ -1,4 +1,5 @@
 const config = require('../config')
+const heightmap = require('./heightmap')
 
 const Biomes = {
   BARE:                       Symbol('BARE'),
@@ -66,9 +67,10 @@ const biomes = (height, rainfall) => {
   let r, g, b
 
   if (height <= config.seaLevel) {
-    r = 0
-    g = 0
-    b = Math.round(height * 127 / config.seaLevel)
+    const rgb = heightmap(height)
+    r = rgb.r
+    g = rgb.g
+    b = rgb.b
   } else {
     const rainfallZone = Math.floor(rainfall)
 
