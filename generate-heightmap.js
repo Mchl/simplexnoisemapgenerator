@@ -10,7 +10,7 @@ function setPixel (x, y, r, g, b, a) {
   }
   const index = y * this.width + x
 
-  this[4 * index    ] = r
+  this[4 * index + 0] = r
   this[4 * index + 1] = g
   this[4 * index + 2] = b
   this[4 * index + 3] = a
@@ -60,7 +60,7 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
 
       const rainfall = rainfallNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
 
-      const {r, g, b} = colorize.height(height)
+      const {r, g, b} = colorize.heightmap(height)
 
       pixels.setPixel(x, y, r, g, b, 255)
 
