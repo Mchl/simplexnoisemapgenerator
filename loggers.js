@@ -3,8 +3,6 @@ const uuid = require('uuid').v4
 
 const mainLogger = bunyan.createLogger({name: 'MAPGEN'})
 
-const requestLogger = mainLogger.child({component: 'REQUEST'})
-
 const logRequestMiddleware = (req, res, next) => {
   const startTime = process.hrtime.bigint()
 
