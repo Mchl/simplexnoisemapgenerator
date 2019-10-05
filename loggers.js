@@ -6,25 +6,26 @@ const mainLogger = bunyan.createLogger({name: 'MAPGEN'})
 const requestLogger = mainLogger.child({component: 'REQUEST'})
 
 const logRequestMiddleware = (req, res, next) => {
-  const startTime = process.hrtime()
-  
+  const startTime = process.hrtime.bigint()
+
   req.uuid = uuid()
-  
-  requestLogger.info(req.uuid.substr(0, 8), req.method, req.originalUrl)
+  req.logger = mainLogger.child({component: 'REQUEST', uuid: req.uuid.substr(0, 8)})
+
+  req.logger.info({method: req.method, originalUrl: req.originalUrl}, 'Request received')
   res.on('finish', function responseSent() {
-    const diff = process.hrtime(startTime)
+    const endTime = process.hrtime.bigint()
     const responseData = {
-      duration: diff[0] * 1e3 + diff[1] * 1e-6,
+      duration: Number(endTime - startTime) / 1000000,
       statusCode: res.statusCode,
       statusMessage: res.statusMessage
     }
 
     if (res.statusCode < 400) {
-      requestLogger.info(req.uuid.substr(0, 8), 'response sent', responseData)
+      req.logger.info(responseData, 'Response sent')
     } else if (res.statusCode < 500) {
-      requestLogger.warn(req.uuid.substr(0, 8), 'response sent', responseData)
+      req.logger.warn(responseData, 'Response sent')
     } else {
-      requestLogger.error(req.uuid.substr(0, 8), 'response sent', responseData)
+      req.logger.error(responseData, 'Response sent')
     }
   })
   next()
