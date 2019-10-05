@@ -34,7 +34,8 @@ const createLayer = config => ({
 const layersConfig = [
   {
     name: 'Height map',
-    tiletype: 'heightmap'
+    tiletype: 'heightmap',
+    default: true
   },
   {
     name: 'Biomes',
@@ -43,8 +44,9 @@ const layersConfig = [
 ]
 
 const layers = layersConfig.reduce((layers, config) => ({...layers, ...createLayer(config)}), {})
+const defaultLayerName = layersConfig.find(({default: def}) => def).name
 
-layers['Height map'].addTo(map)
+layers[defaultLayerName].addTo(map)
 
 L.control.layers(layers).addTo(map)
 
