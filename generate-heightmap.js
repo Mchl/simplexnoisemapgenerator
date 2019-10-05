@@ -16,7 +16,7 @@ function setPixel (x, y, r, g, b, a) {
   this[4 * index + 3] = a
 }
 
-const generateHeightMap = ({size, offset, seed, zoom}) => {
+const generateHeightMap = ({size, offset, seed, zoom, tiletype}) => {
 
   const randomFunction = new Alea(seed)
   const zoomFactor = Math.pow(2, zoom)
@@ -58,11 +58,19 @@ const generateHeightMap = ({size, offset, seed, zoom}) => {
         + featureNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
       ) / 1.2
 
-      const rainfall = rainfallNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
+      let rgb = {}
 
-      const {r, g, b} = colorize.heightmap(height)
-
-      pixels.setPixel(x, y, r, g, b, 255)
+      switch(tiletype) {
+        case 'heightmap':
+          rgb = colorize.heightmap(height)
+          break
+        case 'biomes': {
+          const rainfall = rainfallNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
+          rgb = colorize.biomes(height, rainfall)
+          break;
+        }
+      }
+      pixels.setPixel(x, y, ...Object.values(rgb), 255)
 
     }
   }

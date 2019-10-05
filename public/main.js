@@ -24,15 +24,33 @@ const map = L.map('mapid', {
   zoomControl: true
 });
 
+const createLayer = config => ({
+  [config.name]: L.tileLayer(`${window.location.origin}${window.location.pathname}tiles/${config.tiletype}/{seed}/{z}/{x}/{y}.png`, {
+    seed,
+    zoomOffset: -6
+  })
+})
 
-L.tileLayer(`${window.location.origin}${window.location.pathname}heightmap/{seed}/{z}/{x}/{y}.png`, {
-  seed,
-  zoomOffset: -6
-}).addTo(map);
+const layersConfig = [
+  {
+    name: 'Height map',
+    tiletype: 'heightmap'
+  },
+  {
+    name: 'Biomes',
+    tiletype: 'biomes'
+  }
+]
+
+const layers = layersConfig.reduce((layers, config) => ({...layers, ...createLayer(config)}), {})
+
+layers['Height map'].addTo(map)
+
+L.control.layers(layers).addTo(map)
+
 
 map.on('moveend', () => {
   const mapCenter = map.getCenter()
-
 
   const newurl = `${window.location.origin}${window.location.pathname}?seed=${seed}&lat=${mapCenter.lat}&lng=${mapCenter.lng}&zoom=${map.getZoom()}`
   window.history.pushState({path:newurl},'',newurl);
