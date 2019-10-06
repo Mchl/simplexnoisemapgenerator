@@ -32,6 +32,9 @@ It fails 100% of time (sample size = 3) when using a Node 12 base image.
 By default PM2 is configured to run on as many cores, as available to docker. To change this setting either update `instances` in `ecosystem.config.js` to something else than `0`, or use [appropriate `docker run` configuration][Docker RUN cpuset-constraint docs]
 
 ## Static example
+### 0.0.7
+  Before Bezier profiling ![Example of generated map from 0.0.6](doc/screenshot.0.0.7.before.png)
+  After Bezier profiling (same sea level as above) ![Example of generated map from 0.0.7](doc/screenshot.0.0.7.after.png)
 ### 0.0.6 
   Heightmap ![Example of generated map from 0.0.6](doc/screenshot.0.0.6.heightmap.png)
   Biomes ![Example of generated map from 0.0.6](doc/screenshot.0.0.6.biomes.png)
@@ -44,6 +47,9 @@ I have set it up on [http://code.michaljarosz.net/demo/simplexnoisemapgenerator]
 
 ## Version history
 
+* 0.0.7 - Using bezier curves to alter the distribution of landmass noise, so that it's not all 'mountains in the sea'. 
+The land now rises more gently and mountains are less prominent.
+Seas should be deeper on average too. 
 * 0.0.6 - Heightmap now uses a palette taken from [Wikipedia map Conventions] and boy does it look nice. 
 Also heightmap and biomes layers are both available now and can be switched through UI control.
 Added a scale control just for fun.
