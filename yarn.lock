@@ -53,6 +53,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
+bezier-js@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-2.4.4.tgz#2859edc31e1b1c287ba4788dcccd5d23838c4578"
+  integrity sha512-qYC9FBubdTK4VZe0m+lS7lEpf87w1fnm6g2m1FKsnlz+wfNnJy3gjQt4Y5nnI1NrjJrnQqnZt3S6Z5qjhloDNA==
+
 body-parser@1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"

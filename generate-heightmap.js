@@ -3,6 +3,7 @@ const colorize = require('./colorize')
 const Alea = require('alea')
 const FastSimplexNoise = require('fast-simplex-noise');
 const {createCanvas, createImageData} = require('canvas')
+const Bezier = require('bezier-js')
 
 function setPixel (x, y, r, g, b, a) {
   if (!this.width) {
@@ -16,6 +17,17 @@ function setPixel (x, y, r, g, b, a) {
   this[4 * index + 3] = a
 }
 
+const landmassProfileCurve =
+  [
+    ...new Bezier({x:0, y:0}, {x:0.4, y:0.15}, {x:0.45, y:0.5}, {x:0.5, y:0.5}).getLUT(500),
+    ...new Bezier({x:0.5, y:0.5}, {x:0.5, y:0.7}, {x:1, y:0.7}, {x:1, y:1}).getLUT(500)
+  ]
+
+const landmassProfile = h =>
+  config.landMassProfileEnabled
+    ? landmassProfileCurve.find(({x}) => x >= h).y
+    : h
+
 const generateHeightMap = ({size, offset, seed, zoom, tiletype}) => {
 
   const randomFunction = new Alea(seed)
@@ -24,7 +36,7 @@ const generateHeightMap = ({size, offset, seed, zoom, tiletype}) => {
   const landMassNoise = new FastSimplexNoise({
     frequency: 0.0001,
     min: 0,
-    max: config.maxHeight,
+    max: 1,
     octaves: 2,
     persistence: 0.8,
     random: randomFunction
@@ -54,7 +66,7 @@ const generateHeightMap = ({size, offset, seed, zoom, tiletype}) => {
   for (let x = 0; x < size.x; x++) {
     for (let y = 0; y < size.y; y++) {
       const height = (
-        landMassNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
+        config.maxHeight * landmassProfile(landMassNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor))
         + featureNoise.in2D((x + offset.x) * zoomFactor, (y + offset.y) * zoomFactor)
       ) / 1.2
 
