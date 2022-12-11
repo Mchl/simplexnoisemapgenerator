@@ -13,7 +13,7 @@
     "bezier-js": "^2.4.4",
     "bunyan": "^1.8.12",
     "canvas": "2.6.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fast-simplex-noise": "^2.2.0",
     "uuid": "^2.0.3"
   }
